@@ -19,6 +19,7 @@ static void usage(char *prog) {
 
 char *tokstr[] = {"+", "-", "*", "/", "intlit"};
 
+/* are we not using this?
 // scan tokens and print details of token
 static void scanfile() {
   struct token T;
@@ -29,8 +30,11 @@ static void scanfile() {
     printf("\n");
   }
 }
+*/
 
 void main(int argc, char *argv[]) {
+  struct ASTnode *node;
+
   if (argc != 2) {
     usage(argv[0]);
   }
@@ -42,7 +46,11 @@ void main(int argc, char *argv[]) {
     exit(1);
   }
 
-  scanfile();
+  //scanfile(); are we not using this?
+
+  scan(&Token);
+  node = binexpr();
+  printf("%d\n", interpretAST(node));
 
   exit(0);
 }

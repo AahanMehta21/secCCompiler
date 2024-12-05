@@ -3,12 +3,13 @@
 #include "decl.h"
 
 // return an ASTnode representation of a primary factor
-tatic struct ASTnode *primary(void) {
+static struct ASTnode *primary() {
   struct ASTnode *node;
   // make AST leaf node if INTLIT else error
   switch (Token.token) {
     case T_INTLIT:
-      node = mkastleaf(A_INTLIT, Token.intvalue);
+//      printf("current token: %c, %d\n", Token.intvalue, Token.token);
+      node = makeleaf(A_INTLIT, Token.intvalue);
       scan(&Token);
       return node;
     default:
@@ -29,7 +30,30 @@ int arithmetic_op(int token) {
     case T_SLASH:
       return (A_DIVIDE);
     default:
-      fprintf(stderr, "unknown token in arithmetic_op() on line %d\n", line);
+      fprintf(stderr, "unknown token %d in arithmetic_op() on line %d\n", token, line);
       exit(1);
   }
+}
+
+struct ASTnode* binexpr() {
+  int nodetype;
+  struct ASTnode *node, *left, *right;
+
+  // load integer literal into left pointer, and fetch next token
+  left = primary();
+//  printf("token sent to arith_op: %c, %d\n", Token.intvalue, Token.token);
+  // no tokens left then return this node
+  if (Token.token == T_EOF) {
+    return left;
+  }
+
+  nodetype = arithmetic_op(Token.token);
+
+  scan(&Token);
+
+  right = binexpr();
+
+  node = makenode(nodetype, left, right, 0);
+
+  return node;
 }

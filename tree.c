@@ -1,28 +1,28 @@
-/ builds AST trees
+// builds AST trees
 
 #include "definitions.h"
 #include "data.h"
 #include "decl.h"
 
-struct ASTnode makenode(int op, struct ASTnode *left, struct ASTnode *right, int intvalue) {
+struct ASTnode* makenode(int operation, struct ASTnode *left, struct ASTnode *right, int intvalue) {
   struct ASTnode *node = NULL;
   node = (struct ASTnode *) malloc(sizeof(struct ASTnode));
   if (node == NULL) {
-    fprintf(stderr, "Unable to malloc in makenode()\n"#include "definitions.h"
+    fprintf(stderr, "Unable to malloc in makenode()\n");
     exit(1);
   }
-  node->op = op;
+  node->operation = operation;
   node->left = left;
   node->right = right;
   node->intvalue = intvalue;
   return node;
 }
 
-struct ASTnode makeleaf(int op, int intvalue) {
+struct ASTnode* makeleaf(int op, int intvalue) {
   return makenode(op, NULL, NULL, intvalue);
 }
 
-struct ASTnode makeunary(int op, struct ASTnode *left, int intvalue) {
+struct ASTnode* makeunary(int op, struct ASTnode *left, int intvalue) {
   return makenode(op, left, NULL, intvalue);
 }
 

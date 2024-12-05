@@ -58,10 +58,12 @@ int scanint(int ch) {
 int scan(struct token *t) {
   //skip to next non whitespace character
   int ch = skip();
+  //printf("scanned: %c, %d\n", ch, ch);
 
   // determine token type:
   switch (ch) {
     case EOF:
+      t->token = T_EOF;
       return 0;
     case '+':
       t->token = T_PLUS;
