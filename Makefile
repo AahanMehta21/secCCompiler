@@ -23,23 +23,6 @@ test2: secc_parser2
 	 ./secc_parser2 input4; \
 	 ./secc_parser2 input5)
 
-timetest: secc_parser1
-	-@echo "Running timetest for secc_parser1"
-	@for input in input1 input2 input3 input4 input5; do \
-	  echo "Testing $$input..."; \
-	  /usr/bin/time -f "Command: ./secc_parser1 $$input\nTotal Time: %E" sh -c '\
-	    for i in {1..100000}; do ./secc_parser1 $$input > /dev/null; done'; \
-	done
-
-timetest2: secc_parser2
-	-@echo "Running timetest2 for secc_parser2"
-	@for input in input1 input2 input3 input4 input5; do \
-	  echo "Testing $$input..."; \
-	  /usr/bin/time -f "Command: ./secc_parser2 $$input\nTotal Time: %E" sh -c '\
-	    for i in {1..100000}; do ./secc_parser2 $$input > /dev/null; done'; \
-	done
-
-
 clean:
 	rm -f secc secc_parser1 secc_parser2 *.o
 
