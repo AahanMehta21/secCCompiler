@@ -46,11 +46,18 @@ void main(int argc, char *argv[]) {
     exit(1);
   }
 
+  if ((fasm = fopen("out.s", "w")) == NULL) {
+    fprintf(stderr, "Unable to create out.s: %s\n", strerror(errno));
+    exit(1);
+  }
   //scanfile(); are we not using this?
 
   scan(&Token);
   node = binexpr(0);
   printf("%d\n", interpretAST(node));
+  generatecode(node);
 
+  fclose(fasm);
+  fasm = NULL;
   exit(0);
 }

@@ -1,7 +1,7 @@
-goal: secc secc_parser1 secc_parser2
+goal: secc
 
-secc: main.c scan.c expr.c interpret.c tree.c
-	cc -o secc -g main.c scan.c expr.c interpret.c tree.c
+secc: main.c scan.c expr.c interpret.c tree.c cg.c gen.c
+	cc -o secc -g main.c scan.c expr.c interpret.c tree.c cg.c gen.c
 
 secc_parser1: main.c scan.c expr.c interpret.c tree.c
 	cc -o secc_parser1 -g main.c scan.c expr.c interpret.c tree.c

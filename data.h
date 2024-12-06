@@ -7,4 +7,5 @@
 extern_ int line;
 extern_ int Putback;
 extern_ FILE *in_file;
+extern_ FILE *fasm;
 extern_ struct token Token;
