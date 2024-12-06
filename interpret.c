@@ -14,11 +14,12 @@ int interpretAST(struct ASTnode *node) {
   if (node->right) {
     rightval = interpretAST(node->right);
   }
+  /* this was for debugging purposes it prints as it processes arithmetic ops
   if (node->operation == A_INTLIT) {
     printf("int %d\n", node->intvalue);
   } else {
     printf("%d %s %d\n", leftval, ASTop[node->operation], rightval);
-  }
+  } */
   switch (node->operation) {
     case A_ADD:
       return (leftval + rightval);

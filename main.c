@@ -49,7 +49,7 @@ void main(int argc, char *argv[]) {
   //scanfile(); are we not using this?
 
   scan(&Token);
-  node = binexpr();
+  node = binexpr(0);
   printf("%d\n", interpretAST(node));
 
   exit(0);

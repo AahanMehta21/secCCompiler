@@ -1,6 +1,15 @@
+/*
+  this is a Recursive Descent Parser for operator precendence but is very inefficient
+  because of the constant recursive calls and there are a lot of function calls that
+  need to be made to reach the highest level of precedence
+*/
+
 #include "definitions.h"
 #include "data.h"
 #include "decl.h"
+
+struct ASTnode *additive_expr(void);
+struct ASTnode *multiplicative_expr(void);
 
 // return an ASTnode representation of a primary factor
 static struct ASTnode *primary() {
@@ -35,27 +44,8 @@ int arithmetic_op(int token) {
   }
 }
 
-struct ASTnode* binexpr() {
-  int nodetype;
-  struct ASTnode *node, *left, *right;
-
-  // load integer literal into left pointer, and fetch next token
-  left = primary();
-//  printf("token sent to arith_op: %c, %d\n", Token.intvalue, Token.token);
-  // no tokens left then return this node
-  if (Token.token == T_EOF) {
-    return left;
-  }
-
-  nodetype = arithmetic_op(Token.token);
-
-  scan(&Token);
-
-  right = binexpr();
-
-  node = makenode(nodetype, left, right, 0);
-
-  return node;
+struct ASTnode* binexpr(int nothing) {
+  return additive_expr();
 }
 
 // returns an AST tree whose root is + or -
