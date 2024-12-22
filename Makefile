@@ -1,7 +1,10 @@
 goal: secc
 
-secc: main.c scan.c expr.c interpret.c tree.c cg.c gen.c
-	cc -o secc -g main.c scan.c expr.c interpret.c tree.c cg.c gen.c
+secc: main.c scan.c expr.c interpret.c tree.c cg.c gen.c misc.c statement.c
+	cc -o secc -g main.c scan.c expr.c interpret.c tree.c cg.c gen.c misc.c statement.c
+
+out: out.s
+	cc -o out out.s
 
 secc_parser1: main.c scan.c expr.c interpret.c tree.c
 	cc -o secc_parser1 -g main.c scan.c expr.c interpret.c tree.c
@@ -24,7 +27,7 @@ test2: secc_parser2
 	 ./secc_parser2 input5)
 
 clean:
-	rm -f secc secc_parser1 secc_parser2 *.o
+	rm -f secc secc_parser1 secc_parser2 out.s out *.o
 
 git:
 	@read -p "Enter commit message: " msg; \

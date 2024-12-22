@@ -1,4 +1,4 @@
-#include "definitions.h"
+//#include "definitions.h"
 #include "decl.h"
 #define extern_
 #include "data.h"
@@ -53,10 +53,9 @@ void main(int argc, char *argv[]) {
   //scanfile(); are we not using this?
 
   scan(&Token);
-  node = binexpr(0);
-  printf("%d\n", interpretAST(node));
-  generatecode(node);
-
+  genpreamble();
+  statements();
+  genpostamble();
   fclose(fasm);
   fasm = NULL;
   exit(0);

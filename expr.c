@@ -2,7 +2,7 @@
   Pratt parsing for operator precedence
 */
 
-#include "definitions.h"
+//#include "definitions.h"
 #include "data.h"
 #include "decl.h"
 
@@ -55,7 +55,7 @@ struct ASTnode* binexpr(int ptp) {
   tokentype = Token.token;
 //  printf("token sent to arith_op: %c, %d\n", Token.intvalue, Token.token);
   // no tokens left then return this node
-  if (Token.token == T_EOF) {
+  if (Token.token == T_SEMI) {
     return left;
   }
   while (op_precedence(tokentype) > ptp) {
@@ -64,7 +64,7 @@ struct ASTnode* binexpr(int ptp) {
     right = binexpr(opPrec[tokentype]);
     left = makenode(arithmetic_op(tokentype), left, right, 0);
     tokentype = Token.token;
-    if (tokentype == T_EOF) {
+    if (tokentype == T_SEMI) {
       return left;
     }
   }

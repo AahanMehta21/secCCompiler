@@ -1,9 +1,9 @@
-#include "definitions.h"
+//#include "definitions.h"
 #include "decl.h"
 #include "data.h"
 
 // generate assembly code for given AST tree
-static int genAST(struct ASTnode *node) {
+int genAST(struct ASTnode *node) {
   int left_register, right_register;
   if (node->left)
     left_register = genAST(node->left);
@@ -27,6 +27,20 @@ static int genAST(struct ASTnode *node) {
   }
 }
 
+void genpreamble() {
+  cgpreamble();
+}
+void genpostamble() {
+  cgpostamble();
+}
+void genfreeregs() {
+  free_all_regs();
+}
+void genprintint(int reg) {
+  cgprintint(reg);
+}
+
+/*
 int generatecode(struct ASTnode *node) {
   int result_register;
 
@@ -36,4 +50,4 @@ int generatecode(struct ASTnode *node) {
   cgpostamble();
 
   return 0;
-}
+}*/

@@ -1,5 +1,6 @@
 #include "data.h"
-#include "definitions.h"
+//#include "definitions.h"
+#include "decl.h"
 
 static int chrpos(const char *s, int ch) {
   char *substr = strchr(s, ch);
@@ -36,8 +37,35 @@ static int skip() {
   return ch;
 }
 
+int scanidentifier(int ch, char *buf, int lim) {
+  int i = 0;
+  while (isalpha(ch) || isdigit(ch) || '_' == ch) {
+    if (lim - 1 == i) {
+       printf("identifier too long on line %d\n", line);
+       exit(1);
+    }
+    else {
+      buf[i++] = ch;
+    }
+    ch = next();
+  }
+  putback(ch);
+  buf[i] = '\0';
+  return i;
+}
+
+static int keyword(char *str) {
+  switch (*str) {
+    case 'p':
+      if (!strcmp(str, "print"))
+        return T_PRINT;
+        break;
+  }
+  return 0;
+}
+
 // scans the integer literal and returns it
-int scanint(int ch) {
+static int scanint(int ch) {
   int int_val;
   int literal_val = 0;
 
@@ -56,8 +84,9 @@ int scanint(int ch) {
 // 0: no token found
 // 1: token found
 int scan(struct token *t) {
+  int ch, tokentype;
   //skip to next non whitespace character
-  int ch = skip();
+  ch = skip();
   //printf("scanned: %c, %d\n", ch, ch);
 
   // determine token type:
@@ -77,17 +106,30 @@ int scan(struct token *t) {
     case '/':
       t->token = T_SLASH;
       break;
+    case ';':
+      t->token = T_SEMI;
+      break;
     default:
       // if it is a digit, then its an integer literal, we scan and store the integer value
       if (isdigit(ch)) {
           t->intvalue = scanint(ch);
           t->token = T_INTLIT;
           break;
+      } else if (isalpha(ch) || '_' == ch) {
+        scanidentifier(ch, Text, TEXTLEN);
+        if (tokentype = keyword(Text)) {
+          t->token = tokentype;
+          break;
+        }
+        // not a recognized keyword
+        printf("Unrecognised symbol %s on line %d\n", Text, line);
+        exit(1);
       }
-      // else unrecognized character:
-      printf("Unrecognised character %c on line %d\n", ch, line);
-      exit(1);
-  } 
+    // The character isn't part of any recognised token
+    printf("Unrecognised character %c on line %d\n", ch, line);
+    exit(1); 
+  }
+  // token found
   return 1;
 }
 
