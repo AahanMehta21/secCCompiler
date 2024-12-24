@@ -3,8 +3,8 @@
 */
 
 //#include "definitions.h"
-#include "data.h"
 #include "decl.h"
+#include "data.h"
 
 static int opPrec[] = {0,   1, 1, 2, 2, 0};
 //                      EOF  +  -  *  /  INT_LIT
@@ -14,17 +14,24 @@ static int op_precedence(int);
 // return an ASTnode representation of a primary factor
 static struct ASTnode *primary() {
   struct ASTnode *node;
+  int id;
   // make AST leaf node if INTLIT else error
   switch (Token.token) {
     case T_INTLIT:
-//      printf("current token: %c, %d\n", Token.intvalue, Token.token);
       node = makeleaf(A_INTLIT, Token.intvalue);
-      scan(&Token);
-      return node;
-      default:
-      fprintf(stderr, "syntax error on line %d\n", line);
-      exit(1);
+      break;
+    case T_IDENT:
+      id = findglobal(Text);
+      if (id == -1) {
+        fatals("Unknown variable", Text);
+      }
+      node = makeleaf(A_IDENT, id);
+      break;
+    default:
+      fatald("Syntax error, token", Token.token);
   }
+  scan(&Token);
+  return (node);
 }
 
 // Convert a token into an AST operation.

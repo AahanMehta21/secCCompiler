@@ -1,7 +1,7 @@
 goal: secc
 
-secc: main.c scan.c expr.c interpret.c tree.c cg.c gen.c misc.c statement.c
-	cc -o secc -g main.c scan.c expr.c interpret.c tree.c cg.c gen.c misc.c statement.c
+secc: main.c scan.c expr.c tree.c cg.c gen.c misc.c statement.c decl.c sym.c
+	cc -o secc -g main.c scan.c expr.c tree.c cg.c gen.c misc.c statement.c decl.c sym.c
 
 out: out.s
 	cc -o out out.s

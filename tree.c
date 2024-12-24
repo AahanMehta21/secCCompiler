@@ -1,8 +1,8 @@
 // builds AST trees
 
 //#include "definitions.h"
-#include "data.h"
 #include "decl.h"
+#include "data.h"
 
 struct ASTnode* makenode(int operation, struct ASTnode *left, struct ASTnode *right, int intvalue) {
   struct ASTnode *node = NULL;
@@ -14,7 +14,7 @@ struct ASTnode* makenode(int operation, struct ASTnode *left, struct ASTnode *ri
   node->operation = operation;
   node->left = left;
   node->right = right;
-  node->intvalue = intvalue;
+  node->v.intvalue = intvalue;
   return node;
 }
 

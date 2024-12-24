@@ -1,5 +1,5 @@
-int num1;
-int num2;
-num1 = 5;
-num2 = 12;
-print num1 + num2;
+int numa;
+int numb;
+numa = 5;
+numb = 12;
+print numa + numb;

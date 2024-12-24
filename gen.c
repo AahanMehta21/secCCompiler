@@ -3,12 +3,12 @@
 #include "data.h"
 
 // generate assembly code for given AST tree
-int genAST(struct ASTnode *node) {
+int genAST(struct ASTnode *node, int reg) {
   int left_register, right_register;
   if (node->left)
-    left_register = genAST(node->left);
+    left_register = genAST(node->left, -1);
   if (node->right)
-    right_register = genAST(node->right);
+    right_register = genAST(node->right, left_register);
 
     switch (node->operation) {
     case A_ADD:
@@ -20,24 +20,33 @@ int genAST(struct ASTnode *node) {
     case A_DIVIDE:
       return (cgdiv(left_register, right_register));
     case A_INTLIT:
-      return (cgload(node->intvalue));
+      return (cgloadint(node->v.intvalue));
+    case A_IDENT:
+      return (cgloadglobal(global_vars_table[node->v.id].name));
+    case A_LVIDENT:
+      return (cgstoreglobal(reg, global_vars_table[node->v.id].name));
+    case A_ASSIGN:
+      return right_register;
     default:
-      fprintf(stderr, "Unknown AST operator %d\n", node->operation);
+      fatald("Unknown AST operator", node->operation);
       exit(1);
   }
 }
 
-void genpreamble() {
+void genpreamble(void) {
   cgpreamble();
 }
-void genpostamble() {
+void genpostamble(void) {
   cgpostamble();
 }
-void genfreeregs() {
+void genfreeregs(void) {
   free_all_regs();
 }
 void genprintint(int reg) {
   cgprintint(reg);
+}
+void genglobalsym(char *s) {
+  cgglobalsym(s);
 }
 
 /*

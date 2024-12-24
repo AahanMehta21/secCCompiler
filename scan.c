@@ -1,6 +1,5 @@
-#include "data.h"
-//#include "definitions.h"
 #include "decl.h"
+#include "data.h"
 
 static int chrpos(const char *s, int ch) {
   char *substr = strchr(s, ch);
@@ -59,7 +58,11 @@ static int keyword(char *str) {
     case 'p':
       if (!strcmp(str, "print"))
         return T_PRINT;
-        break;
+      break;
+    case 'i':
+      if (!strcmp(str, "int"))
+        return T_INT;
+      break;
   }
   return 0;
 }
@@ -109,6 +112,8 @@ int scan(struct token *t) {
     case ';':
       t->token = T_SEMI;
       break;
+    case '=':
+      t->token = T_EQUALS;
     default:
       // if it is a digit, then its an integer literal, we scan and store the integer value
       if (isdigit(ch)) {
@@ -122,12 +127,11 @@ int scan(struct token *t) {
           break;
         }
         // not a recognized keyword
-        printf("Unrecognised symbol %s on line %d\n", Text, line);
-        exit(1);
+        t->token = T_IDENT;
+        break;
       }
     // The character isn't part of any recognised token
-    printf("Unrecognised character %c on line %d\n", ch, line);
-    exit(1); 
+    fatalc("Unrecognized character", ch); 
   }
   // token found
   return 1;

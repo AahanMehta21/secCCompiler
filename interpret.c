@@ -1,6 +1,6 @@
 //#include "definitions.h"
-#include "data.h"
 #include "decl.h"
+#include "data.h"
 
 static char *ASTop[] = { "+", "-", "*", "/" };
 

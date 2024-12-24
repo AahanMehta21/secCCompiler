@@ -21,17 +21,5 @@ printint:
 main:
 	pushq %rbp
 	movq %rsp, %rbp
-	movq $1, %r8
-	movq %r8, %rdi
-	call printint
-	movq $2, %r8
-	movq %r8, %rdi
-	call printint
-	movq $3, %r8
-	movq $3, %r9
-	imulq %r8, %r9
-	movq %r9, %rdi
-	call printint
-	xorl %eax, %eax
-	popq %rbp
-	ret
+	.comm	numa, 8
+	.comm	numb, 
