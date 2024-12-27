@@ -114,6 +114,7 @@ int scan(struct token *t) {
       break;
     case '=':
       t->token = T_EQUALS;
+      break;
     default:
       // if it is a digit, then its an integer literal, we scan and store the integer value
       if (isdigit(ch)) {

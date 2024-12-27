@@ -98,7 +98,7 @@ int cgstoreglobal(int reg, char *name) {
 
 // declare global variable
 void cgglobalsym(char *sym) {
-  fprintf(fasm, "\t.comm\t%s, 8\n", sym);
+  fprintf(fasm, "\t.comm\t%s,8,8\n", sym);
 }
 
 // add two given registers, free one register and store the result in the other register and return its id
