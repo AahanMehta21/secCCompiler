@@ -4,6 +4,7 @@
 
 static int freereg[4];
 static char *regStk[4]= { "%r8", "%r9", "%r10", "%r11" };
+static char *byteRegStk[4] = {"%r8b", "%r9b", "%r10b", "%r11b"};
 
 // set all registers as available
 void free_all_regs() {
@@ -105,21 +106,21 @@ void cgglobalsym(char *sym) {
 int cgadd(int reg1, int reg2) {
   fprintf(fasm, "\taddq %s, %s\n", regStk[reg1], regStk[reg2]);
   free_reg(reg1);
-  return reg2;
+  return (reg2);
 }
 
 // same as cgadd but subtract
 int cgsub(int reg1, int reg2) {
   fprintf(fasm, "\tsubq %s, %s\n", regStk[reg2], regStk[reg1]);
   free_reg(reg2);
-  return reg1;
+  return (reg1);
 }
 
 // same as cgadd but multiply
 int cgmul(int reg1, int reg2) {
   fprintf(fasm, "\timulq %s, %s\n", regStk[reg1], regStk[reg2]);
   free_reg(reg1);
-  return reg2;
+  return (reg2);
 }
 
 // same as cgadd but divide
@@ -129,7 +130,7 @@ int cgdiv(int reg1, int reg2) {
   fprintf(fasm, "\tidivq %s\n", regStk[reg2]);
   fprintf(fasm, "\tmovq %%rax, %s\n", regStk[reg1]);
   free_reg(reg2);
-  return reg1;
+  return (reg1);
 }
 
 //call printint() with the current integer
@@ -138,3 +139,19 @@ void cgprintint(int curr_reg) {
   fprintf(fasm, "\tcall printint\n");
   free_reg(curr_reg);
 }
+
+static int cgcompare(int reg1, int reg2, char *how) {
+  fprintf(fasm, "\tcmpq %s, %s\n", regStk[reg2], regStk[reg1]);
+  fprintf(fasm, "\tmovq $0, %s\n", regStk[reg2]);
+  fprintf(fasm, "\t%s %s\n", how, byteRegStk[reg2]);
+  free_reg(reg1);
+  return (reg2);
+}
+
+int cgequal(int r1, int r2) { return(cgcompare(r1, r2, "sete")); }
+int cgnotequal(int r1, int r2) { return(cgcompare(r1, r2, "setne")); }
+int cglessthan(int r1, int r2) { return(cgcompare(r1, r2, "setl")); }
+int cggreaterthan(int r1, int r2) { return(cgcompare(r1, r2, "setg")); }
+int cglessequal(int r1, int r2) { return(cgcompare(r1, r2, "setle")); }
+int cggreaterequal(int r1, int r2) { return(cgcompare(r1, r2, "setge")); }
+

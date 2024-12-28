@@ -36,6 +36,12 @@ void cgprintint(int reg);
 int cgloadglobal(char *ident);
 int cgstoreglobal(int reg, char *name);
 void cgglobalsym(char *ident);
+int cgequal(int reg1, int reg2);
+int cgnotequal(int reg1, int reg2);
+int cglessthan(int reg1, int reg2);
+int cggreaterthan(int reg1, int reg2);
+int cglessequal(int reg1, int reg2);
+int cggreaterequal(int reg1, int reg2);
 
 // statement.c
 void statements(void);

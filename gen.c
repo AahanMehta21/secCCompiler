@@ -25,6 +25,18 @@ int genAST(struct ASTnode *node, int reg) {
       return (cgloadglobal(global_vars_table[node->v.id].name));
     case A_LVIDENT:
       return (cgstoreglobal(reg, global_vars_table[node->v.id].name));
+    case A_EQ:
+      return (cgequal(left_register, right_register));
+    case A_NE:
+      return (cgnotequal(left_register, right_register));
+    case A_LT:
+      return (cglessthan(left_register, right_register));
+    case A_GT:
+      return (cggreaterthan(left_register, right_register));
+    case A_LE:
+      return (cglessequal(left_register, right_register));
+    case A_GE:
+      return (cggreaterequal(left_register, right_register));
     case A_ASSIGN:
       return right_register;
     default:

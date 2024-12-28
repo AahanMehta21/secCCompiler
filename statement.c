@@ -27,7 +27,7 @@ void assignment_statement(void) {
   }
   right = makeleaf(A_LVIDENT, id);
   // =
-  match(T_EQUALS, "=");
+  match(T_ASSIGN, "=");
   // EXPRESSION
   left = binexpr(0);
   tree = makenode(A_ASSIGN, left, right, 0);

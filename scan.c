@@ -113,7 +113,35 @@ int scan(struct token *t) {
       t->token = T_SEMI;
       break;
     case '=':
-      t->token = T_EQUALS;
+      if ((ch = next()) == '=') {
+        t->token = T_EQ;
+      } else {
+        putback(ch);
+        t->token = T_ASSIGN;
+      }
+      break;
+    case '!':
+      if ((ch = next()) == '=') {
+        t->token = T_NE;
+      } else {
+        fatalc("Unrecognized character", ch);
+      }
+      break;
+    case '<':
+      if ((ch = next()) == '=') {
+        t->token = T_LE;
+      } else {
+        putback(ch);
+        t->token = T_LT;
+      }
+      break;
+    case '>':
+      if ((ch = next()) == '=') {
+        t->token = T_GE;
+      } else {
+        putback(ch);
+        t->token = T_GT;
+      }
       break;
     default:
       // if it is a digit, then its an integer literal, we scan and store the integer value

@@ -6,8 +6,12 @@
 #include "decl.h"
 #include "data.h"
 
-static int opPrec[] = {0,   1, 1, 2, 2, 0};
-//                      EOF  +  -  *  /  INT_LIT
+static int opPrec[] = {
+  0, 1, 1,        // T_EOF, T_PLUS, T_MINUS
+  2, 2,           // T_STAR, T_SLASH
+  3, 3,           // T_EQ, T_NE
+  4, 4, 4, 4    // T_LT, T_GT, T_LE, T_GE
+};
 
 static int op_precedence(int);
 
@@ -36,19 +40,9 @@ static struct ASTnode *primary() {
 
 // Convert a token into an AST operation.
 int arithmetic_op(int token) {
-  switch (token) {
-    case T_PLUS:
-      return (A_ADD);
-    case T_MINUS:
-      return (A_SUBTRACT);
-    case T_STAR:
-      return (A_MULTIPLY);
-    case T_SLASH:
-      return (A_DIVIDE);
-    default:
-      fprintf(stderr, "unknown token %d in arithmetic_op() on line %d\n", token, line);
-      exit(1);
-  }
+  if (token > T_EOF && token < T_INTLIT)
+    return (token);
+  fatald("Syntax error, token", token);
 }
 
 // generate an ASTtree
