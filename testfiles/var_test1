@@ -1,5 +1,6 @@
-int numa;
+{int numa;
 int numb;
 numa = 5;
 numb = 12;
 print numa + numb;
+}

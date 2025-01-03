@@ -55,13 +55,19 @@ int scanidentifier(int ch, char *buf, int lim) {
 
 static int keyword(char *str) {
   switch (*str) {
+    case 'e':
+      if (!strcmp(str, "else"))
+        return T_ELSE;
+      break;
+    case 'i':
+      if (!strcmp(str, "if"))
+        return T_IF;
+      if (!strcmp(str, "int"))
+        return T_INT;
+      break;
     case 'p':
       if (!strcmp(str, "print"))
         return T_PRINT;
-      break;
-    case 'i':
-      if (!strcmp(str, "int"))
-        return T_INT;
       break;
   }
   return 0;
@@ -111,6 +117,18 @@ int scan(struct token *t) {
       break;
     case ';':
       t->token = T_SEMI;
+      break;
+    case '{':
+      t->token = T_LBRACE;
+      break;
+    case '}':
+      t->token = T_RBRACE;
+      break;
+    case '(':
+      t->token = T_LPAREN;
+      break;
+    case ')':
+      t->token = T_RPAREN;
       break;
     case '=':
       if ((ch = next()) == '=') {
