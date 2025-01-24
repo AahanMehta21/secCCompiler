@@ -2,9 +2,26 @@
 #include "decl.h"
 #include "data.h"
 
+static int label(void) {
+  // static variable so it holds its value across calls
+  static int id = 1;
+  return (id++);
+}
+
 // generate assembly code for given AST tree
-int genAST(struct ASTnode *node, int reg) {
+int genAST(struct ASTnode *node, int reg, int parentASTop) {
   int left_register, right_register;
+  switch (node->operation) {
+    case A_IF:
+      return (genIFAST(node));
+    case A_GLUE:
+      genAST(node->left, NOREG, node->operation);
+      genfreeregs();
+      genAST(node->right, NOREG, node->operation);
+      genfreeregs();
+      return (NOREG);
+  }
+
   if (node->left)
     left_register = genAST(node->left, -1);
   if (node->right)

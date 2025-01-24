@@ -2,24 +2,24 @@
 #include "decl.h"
 #include "data.h"
 
-void print_statement(void) {
+static struct ASTnode * print_statement(void) {
   struct ASTnode *tree;
   int reg;
   // PRINT
   match(T_PRINT, "print");
-  // EXPRESSION
+  // parses the expression and generates expression tree
   tree = binexpr(0);
-  reg = genAST(tree, -1);
-  genprintint(reg);
-  genfreeregs();
+  // print sentence is added to expression tree
+  tree = makeunary(A_PRINT, tree, 0);
   // ; 
   semi();
+  return (tree);
 }
 
-void assignment_statement(void) {
+static struct ASTnode * assignment_statement(void) {
   struct ASTnode *left, *right, *tree;
   int id;
-  // IDENTIFIER
+  // ensure identifier exists in source code
   ident();
   id = findglobal(Text);
   if (id == -1) {
@@ -31,28 +31,61 @@ void assignment_statement(void) {
   // EXPRESSION
   left = binexpr(0);
   tree = makenode(A_ASSIGN, left, right, 0);
-  genAST(tree, -1);
-  genfreeregs();
   // ;
   semi();
+  return (tree);
 }
 
-void statements(void) {
+struct ASTnode * if_statement(void) {
+  struct ASTnode *condAST = NULL;
+  struct ASTnode *trueAST = NULL;
+  struct ASTnode *falseAST = NULL;
+  match(T_IF, "if");
+  lparen();
+  condAST = binexpr(0);
+  // checking if the operator is a comparision operator (using enum range)
+  if (condAST->op < A_EQ || condAST->op > A_GE)
+    fatal("Bad comparison operator");
+  rparen();
+  trueAST = compound_statement();
+  if (Token.token == T_ELSE) {
+    scan(&Token);
+    falseAST = compound_statement();
+  }
+  return (makenode(A_IF, condAST, trueAST, falseAST, 0));
+}
+
+struct ASTnode * compound_statement(void) {
+  struct ASTnode *left = NULL;
+  struct ASTnode *tree;
+  lbrace();
   while(1) {
     switch(Token.token) {
       case T_PRINT:
-        print_statement();
+        tree = print_statement();
         break;
       case T_INT:
         var_declaration();
+        tree = NULL; // no tree generated
         break;
       case T_IDENT:
-        assignment_statement();
+        tree = assignment_statement();
         break;
-      case T_EOF:
-        return;
+      case T_IF:
+        tree = if_statement();
+        break;
+      case T_RBRACE:
+        rbrace();
+        return(left);
       default:
         fatald("Syntax error, token", Token.token);
+    }
+    if (tree) {
+      if (left == NULL) {
+        left = tree;
+      } else {
+        left = makenode(A_GLUE, left, NULL, tree, 0);
+      }
     }
   }
 }
