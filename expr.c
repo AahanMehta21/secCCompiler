@@ -56,7 +56,7 @@ struct ASTnode* binexpr(int ptp) {
   tokentype = Token.token;
 //  printf("token sent to arith_op: %c, %d\n", Token.intvalue, Token.token);
   // no tokens left then return this node
-  if (Token.token == T_SEMI) {
+  if (Token.token == T_SEMI || Token.token == T_RPAREN) {
     return left;
   }
   while (op_precedence(tokentype) > ptp) {
@@ -65,7 +65,7 @@ struct ASTnode* binexpr(int ptp) {
     right = binexpr(opPrec[tokentype]);
     left = makenode(arithmetic_op(tokentype), left, NULL, right, 0);
     tokentype = Token.token;
-    if (tokentype == T_SEMI) {
+    if (tokentype == T_SEMI || tokentype == T_RPAREN) {
       return left;
     }
   }
