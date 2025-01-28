@@ -1,1 +1,1 @@
-23 * 456abcdefg
+{print 23 * 456abcdefg;}

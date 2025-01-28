@@ -150,8 +150,8 @@ int cgcompare_and_set (int ASTop, int reg1, int reg2) {
   }
 
   fprintf(fasm, "\tcmpq %s, %s\n", regStk[reg2], regStk[reg1]);
-  fprintf(fasm, "\t%s, %s\n", cmplist[ASTop - A_EQ], byteRegStk[reg2]);
-  fprintf(fasm, "\tmovzbq %s, %s\n", byteRegStk[reg2], byteRegStk[reg2]);
+  fprintf(fasm, "\t%s %s\n", cmplist[ASTop - A_EQ], byteRegStk[reg2]);
+  fprintf(fasm, "\tmovzbq %s, %s\n", byteRegStk[reg2], regStk[reg2]);
   free_reg(reg1);
   return (reg2);
 }

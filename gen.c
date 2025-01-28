@@ -88,7 +88,7 @@ int genAST(struct ASTnode *node, int reg, int parentASTop) {
     case A_ASSIGN:
       return right_register;
     case A_PRINT:
-      genprintint(reg);
+      genprintint(left_register);
       genfreeregs();
       return (NOREG);
     default:
