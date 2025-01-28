@@ -140,18 +140,36 @@ void cgprintint(int curr_reg) {
   free_reg(curr_reg);
 }
 
-static int cgcompare(int reg1, int reg2, char *how) {
+//                             A_EQ,    A_NE,   A_LT,   A_GT,    A_LE,   A_GE
+static char *cmplist[] =    { "sete", "setne", "setl", "setg", "setle", "setge" };
+static char *invcmplist[] = { "jne",  "je",    "jge",  "jle",  "jg",    "jl" };
+
+int cgcompare_and_set (int ASTop, int reg1, int reg2) {
+  if (ASTop < A_EQ || ASTop > A_GE) {
+    fatal("Bad ASTop in cgcompare_and_set()");
+  }
+
   fprintf(fasm, "\tcmpq %s, %s\n", regStk[reg2], regStk[reg1]);
-  fprintf(fasm, "\tmovq $0, %s\n", regStk[reg2]);
-  fprintf(fasm, "\t%s %s\n", how, byteRegStk[reg2]);
+  fprintf(fasm, "\t%s, %s\n", cmplist[ASTop - A_EQ], byteRegStk[reg2]);
+  fprintf(fasm, "\tmovzbq %s, %s\n", byteRegStk[reg2], byteRegStk[reg2]);
   free_reg(reg1);
   return (reg2);
 }
 
-int cgequal(int r1, int r2) { return(cgcompare(r1, r2, "sete")); }
-int cgnotequal(int r1, int r2) { return(cgcompare(r1, r2, "setne")); }
-int cglessthan(int r1, int r2) { return(cgcompare(r1, r2, "setl")); }
-int cggreaterthan(int r1, int r2) { return(cgcompare(r1, r2, "setg")); }
-int cglessequal(int r1, int r2) { return(cgcompare(r1, r2, "setle")); }
-int cggreaterequal(int r1, int r2) { return(cgcompare(r1, r2, "setge")); }
+void cglabel(int label) {
+  fprintf(fasm, "L%d:\n", label);
+}
 
+void cgjump(int label) {
+  fprintf(fasm, "\tjmp L%d\n", label);
+}
+
+int cgcompare_and_jump (int ASTop, int reg1, int reg2, int label) {
+  if (ASTop < A_EQ || ASTop > A_GE) {
+    fatal("Bad ASTop in cgcompare_and_jump()");
+  }
+  fprintf(fasm, "\tcmpq %s, %s\n", regStk[reg2], regStk[reg1]);
+  fprintf(fasm, "\%s L%d\n", invcmplist[ASTop - A_EQ], label);
+  free_all_regs();
+  return (NOREG);
+}

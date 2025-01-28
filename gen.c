@@ -8,6 +8,38 @@ static int label(void) {
   return (id++);
 }
 
+static int genIFAST(struct ASTnode *node) {
+  int Lfalse, Lend;
+
+  Lfalse = label();
+  // if there is a false, then node->right exists and then Lend is the end, else Lfalse is the end of the if block
+  if (node->right) {
+    Lend = label();
+  }
+  // generate the condition AST
+  genAST(node->left, Lfalse, node->operation);
+  genfreeregs();
+
+  // generate the true compound statement
+  genAST(node->middle, NOREG, node->operation);
+  genfreeregs();
+
+  // if there is an else, jump to end after parsing if compound
+  if (node->right) {
+    cgjump(Lend);
+  }
+  cglabel(Lfalse);
+
+  // generate false compound statement
+  if (node->right) {
+    genAST(node->right, NOREG, node->operation);
+    genfreeregs();
+    cglabel(Lend);
+  }
+
+  return (NOREG);
+}
+
 // generate assembly code for given AST tree
 int genAST(struct ASTnode *node, int reg, int parentASTop) {
   int left_register, right_register;
@@ -23,9 +55,9 @@ int genAST(struct ASTnode *node, int reg, int parentASTop) {
   }
 
   if (node->left)
-    left_register = genAST(node->left, -1);
-  if (node->right)
-    right_register = genAST(node->right, left_register);
+    left_register = genAST(node->left, NOREG, node->operation);
+    if (node->right)
+    right_register = genAST(node->right, left_register, node->operation);
 
     switch (node->operation) {
     case A_ADD:
@@ -43,19 +75,22 @@ int genAST(struct ASTnode *node, int reg, int parentASTop) {
     case A_LVIDENT:
       return (cgstoreglobal(reg, global_vars_table[node->v.id].name));
     case A_EQ:
-      return (cgequal(left_register, right_register));
     case A_NE:
-      return (cgnotequal(left_register, right_register));
     case A_LT:
-      return (cglessthan(left_register, right_register));
     case A_GT:
-      return (cggreaterthan(left_register, right_register));
     case A_LE:
-      return (cglessequal(left_register, right_register));
     case A_GE:
-      return (cggreaterequal(left_register, right_register));
+      if (parentASTop == A_IF) {
+        return cgcompare_and_jump(node->operation, left_register, right_register, reg);
+      } else {
+        return cgcompare_and_set(node->operation, left_register, right_register);
+      }
     case A_ASSIGN:
       return right_register;
+    case A_PRINT:
+      genprintint(reg);
+      genfreeregs();
+      return (NOREG);
     default:
       fatald("Unknown AST operator", node->operation);
       exit(1);

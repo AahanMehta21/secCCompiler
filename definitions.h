@@ -31,7 +31,7 @@ enum {
 struct ASTnode {
   int operation;
   struct ASTnode *left;
-  sruct ASTnode *middle;
+  struct ASTnode *middle;
   struct ASTnode *right;
   union {
     int intvalue; // if its a T_INTLIT integer value

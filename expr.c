@@ -63,7 +63,7 @@ struct ASTnode* binexpr(int ptp) {
     scan(&Token);
     // recursively call binexpr with precedence of current token to build AST tree
     right = binexpr(opPrec[tokentype]);
-    left = makenode(arithmetic_op(tokentype), left, right, 0);
+    left = makenode(arithmetic_op(tokentype), left, NULL, right, 0);
     tokentype = Token.token;
     if (tokentype == T_SEMI) {
       return left;

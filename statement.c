@@ -30,7 +30,7 @@ static struct ASTnode * assignment_statement(void) {
   match(T_ASSIGN, "=");
   // EXPRESSION
   left = binexpr(0);
-  tree = makenode(A_ASSIGN, left, right, 0);
+  tree = makenode(A_ASSIGN, left, NULL, right, 0);
   // ;
   semi();
   return (tree);
@@ -44,7 +44,7 @@ struct ASTnode * if_statement(void) {
   lparen();
   condAST = binexpr(0);
   // checking if the operator is a comparision operator (using enum range)
-  if (condAST->op < A_EQ || condAST->op > A_GE)
+  if (condAST->operation < A_EQ || condAST->operation > A_GE)
     fatal("Bad comparison operator");
   rparen();
   trueAST = compound_statement();
