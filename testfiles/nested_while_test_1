@@ -1,4 +1,4 @@
-{ int i;
+void main() { int i;
   i=1;
   int j;
   while (i <= 4) {

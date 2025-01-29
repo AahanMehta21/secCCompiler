@@ -1,1 +1,1 @@
-{print 23 * 456abcdefg;}
+void main() {print 23 * 456abcdefg;}

@@ -16,26 +16,45 @@ printint:
 	leave
 	ret
 
+	.comm	i,8,8
+	.comm	j,8,8
 	.text
 	.globl main
 	.type	main, @function
 main:
 	pushq	%rbp
 	movq	%rsp, %rbp
-	movq $2, %r8
-	movq $3, %r9
-	movq $5, %r10
-	imulq %r9, %r10
-	addq %r8, %r10
-	movq $8, %r8
-	movq $3, %r9
-	movq %r8, %rax
-	cqo;
-	idivq %r9
-	movq %rax, %r8
-	subq %r8, %r10
-	movq %r10, %rdi
+	movq $0, %r8
+	movq %r8, i(%rip)
+L1:
+	movq i(%rip), %r8
+	movq $5, %r9
+	cmpq %r9, %r8
+jge L2
+	movq $0, %r8
+	movq %r8, j(%rip)
+L3:
+	movq j(%rip), %r8
+	movq $5, %r9
+	cmpq %r9, %r8
+jge L4
+	movq i(%rip), %r8
+	movq j(%rip), %r9
+	addq %r8, %r9
+	movq %r9, %rdi
 	call printint
+	movq j(%rip), %r8
+	movq $1, %r9
+	addq %r8, %r9
+	movq %r9, j(%rip)
+	jmp L3
+L4:
+	movq i(%rip), %r8
+	movq $1, %r9
+	addq %r8, %r9
+	movq %r9, i(%rip)
+	jmp L1
+L2:
 	xorl %eax, %eax
 	popq %rbp
 	ret

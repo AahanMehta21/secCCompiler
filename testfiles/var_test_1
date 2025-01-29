@@ -1,4 +1,5 @@
-{int numa;
+void main() {
+int numa;
 int numb;
 numa = 5;
 numb = 12;

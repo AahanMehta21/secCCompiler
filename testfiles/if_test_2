@@ -1,4 +1,4 @@
-{
+void main() {
   int i; int j; int k;
   i = 3;
   j = 4;
