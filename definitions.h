@@ -22,8 +22,8 @@ enum {
   // 11       12       13         14
   T_LBRACE, T_RBRACE, T_LPAREN, T_RPAREN,
   // 15        16        17        18
-  T_PRINT, T_INT, T_IF, T_ELSE, T_WHILE
-  // 19      20    21     22       23
+  T_PRINT, T_INT, T_IF, T_ELSE, T_WHILE, T_FOR
+  // 19      20    21     22       23     24
 };
 
 // AST nodes:

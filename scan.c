@@ -60,6 +60,10 @@ static int keyword(char *str) {
         return (T_ELSE);
       }
       break;
+    case 'f':
+      if (!strcmp(str, "for")) {
+        return (T_FOR);
+      }
     case 'i':
       if (!strcmp(str, "if")) {
         return (T_IF);

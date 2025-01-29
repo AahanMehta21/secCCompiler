@@ -11,6 +11,7 @@ tests=(
   "while_test_1"
   "print_arithop_test_1" "print_arithop_test_2"
   "var_test_1" "var_test_2"
+  "for_test_1" "for_test_2" "nested_loop_test_1"
 )
 
 cd ..
