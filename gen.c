@@ -40,12 +40,32 @@ static int genIFAST(struct ASTnode *node) {
   return (NOREG);
 }
 
+static int genWhile(struct ASTnode *node) {
+  int Lstart, Lend;
+
+  Lstart = label();
+  Lend = label();
+  cglabel(Lstart);
+
+  genAST(node->left, Lend, node->operation);
+  genfreeregs();
+
+  genAST(node->right, NOREG, node->operation);
+  genfreeregs();
+
+  cgjump(Lstart);
+  cglabel(Lend);
+  return (NOREG);
+}
+
 // generate assembly code for given AST tree
 int genAST(struct ASTnode *node, int reg, int parentASTop) {
   int left_register, right_register;
   switch (node->operation) {
     case A_IF:
       return (genIFAST(node));
+    case A_WHILE:
+      return (genWhile(node));
     case A_GLUE:
       genAST(node->left, NOREG, node->operation);
       genfreeregs();
@@ -80,7 +100,7 @@ int genAST(struct ASTnode *node, int reg, int parentASTop) {
     case A_GT:
     case A_LE:
     case A_GE:
-      if (parentASTop == A_IF) {
+      if (parentASTop == A_IF || parentASTop == A_WHILE) {
         return cgcompare_and_jump(node->operation, left_register, right_register, reg);
       } else {
         return cgcompare_and_set(node->operation, left_register, right_register);

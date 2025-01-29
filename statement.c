@@ -36,6 +36,23 @@ static struct ASTnode * assignment_statement(void) {
   return (tree);
 }
 
+struct ASTnode * while_statement(void) {
+  struct ASTnode *condAST, *bodyAST;
+
+  match(T_WHILE, "while");
+  lparen();
+
+  condAST = binexpr(0);
+  if (condAST->operation < A_EQ || condAST->operation > A_GE) {
+    fatal("Bad comparision operator");
+  }
+  rparen();
+
+  bodyAST = compound_statement();
+
+  return (makenode(A_WHILE, condAST, NULL, bodyAST, 0));
+}
+
 struct ASTnode * if_statement(void) {
   struct ASTnode *condAST = NULL;
   struct ASTnode *trueAST = NULL;
@@ -73,6 +90,9 @@ struct ASTnode * compound_statement(void) {
         break;
       case T_IF:
         tree = if_statement();
+        break;
+      case T_WHILE:
+        tree = while_statement();
         break;
       case T_RBRACE:
         rbrace();

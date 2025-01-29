@@ -56,18 +56,27 @@ int scanidentifier(int ch, char *buf, int lim) {
 static int keyword(char *str) {
   switch (*str) {
     case 'e':
-      if (!strcmp(str, "else"))
-        return T_ELSE;
+      if (!strcmp(str, "else")) {
+        return (T_ELSE);
+      }
       break;
     case 'i':
-      if (!strcmp(str, "if"))
-        return T_IF;
-      if (!strcmp(str, "int"))
-        return T_INT;
+      if (!strcmp(str, "if")) {
+        return (T_IF);
+      }
+      if (!strcmp(str, "int")) {
+        return (T_INT);
+      }
       break;
     case 'p':
-      if (!strcmp(str, "print"))
-        return T_PRINT;
+      if (!strcmp(str, "print")) {
+        return (T_PRINT);
+      }
+      break;
+    case 'w':
+      if (!strcmp(str, "while")) {
+        return (T_WHILE);
+      }
       break;
   }
   return 0;
