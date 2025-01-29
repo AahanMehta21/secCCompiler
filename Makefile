@@ -15,7 +15,7 @@ testbench: secc testfiles/runtestbench.sh
 	(cd testfiles; chmod +x runtests.sh; ./runtestbench.sh)
 
 clean:
-	rm -f secc secc_parser1 secc_parser2 out.s out *.o
+	rm -f secc curr_output out.s out *.o
 
 git:
 	@read -p "Enter commit message: " msg; \
