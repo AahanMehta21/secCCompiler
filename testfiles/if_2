@@ -1,0 +1,9 @@
+{
+  int i; int j; int k;
+  i = 3;
+  j = 4;
+  k = i * j + 2;
+  if (k == 14) {
+    print k;
+  }
+}

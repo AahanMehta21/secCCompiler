@@ -1,0 +1,14 @@
+{
+  int i;
+  i = 1;
+  int j;
+  j = 3;
+  if (i < j) {
+    i = i + 1;
+    if (i == j) {
+      print j;
+    } else {
+      print 0;
+    }
+  }
+}
