@@ -21,40 +21,40 @@ printint:
 main:
 	pushq %rbp
 	movq %rsp, %rbp
-	.comm	i,8,8
-	.comm	j,8,8
+	.comm	x,8,8
 	movq $1, %r8
-	movq %r8, i(%rip)
-L1:
-	movq i(%rip), %r8
-	movq $4, %r9
-	cmpq %r9, %r8
-jg L2
-	movq $0, %r8
-	movq %r8, j(%rip)
-	movq i(%rip), %r8
+	movq %r8, x(%rip)
+	movq x(%rip), %r8
 	movq %r8, %rdi
 	call printint
-L3:
-	movq j(%rip), %r8
-	movq i(%rip), %r9
-	cmpq %r9, %r8
-jg L4
-	movq j(%rip), %r8
+	movq x(%rip), %r8
+	movq $1, %r9
+	addq %r8, %r9
+	movq %r9, x(%rip)
+	movq x(%rip), %r8
 	movq %r8, %rdi
 	call printint
-	movq j(%rip), %r8
+	movq x(%rip), %r8
 	movq $1, %r9
 	addq %r8, %r9
-	movq %r9, j(%rip)
-	jmp L3
-L4:
-	movq i(%rip), %r8
+	movq %r9, x(%rip)
+	movq x(%rip), %r8
+	movq %r8, %rdi
+	call printint
+	movq x(%rip), %r8
 	movq $1, %r9
 	addq %r8, %r9
-	movq %r9, i(%rip)
-	jmp L1
-L2:
+	movq %r9, x(%rip)
+	movq x(%rip), %r8
+	movq %r8, %rdi
+	call printint
+	movq x(%rip), %r8
+	movq $1, %r9
+	addq %r8, %r9
+	movq %r9, x(%rip)
+	movq x(%rip), %r8
+	movq %r8, %rdi
+	call printint
 	xorl %eax, %eax
 	popq %rbp
 	ret
