@@ -35,7 +35,7 @@ static void free_reg(int reg) {
   freereg[reg] = 1;
 }
 
-// Print out the assembly preamble
+  // Print out the assembly preamble
 void cgpreamble()
 {
   free_all_regs();
@@ -57,24 +57,29 @@ void cgpreamble()
 	"\tnop\n"
 	"\tleave\n"
 	"\tret\n"
-	"\n"
-	"\t.globl main\n"
-	"\t.type main, @function\n"
-	"main:\n"
-	"\tpushq %rbp\n"
-	"\tmovq %rsp, %rbp\n",
+	"\n",
   fasm);
 }
 
+// print function preamble
+void cgfuncpreamble(char *funcname) {
+  fprintf(fasm,
+	  "\t.text\n"
+	  "\t.globl %s\n"
+	  "\t.type\t%s, @function\n"
+	  "%s:\n" 
+    "\tpushq\t%%rbp\n"
+	  "\tmovq\t%%rsp, %%rbp\n", funcname, funcname, funcname);
+}
+
 // prints postable
-void cgpostamble()
+void cgfuncpostamble()
 {
   fputs(
 	"\txorl %eax, %eax\n"
 	"\tpopq %rbp\n"
 	"\tret\n",
   fasm);
-  free_all_regs();
 }
 
 // load an integer value into next available register and return register id (number)

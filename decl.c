@@ -10,3 +10,20 @@ void var_declaration(void) {
   // } ;
   semi();
 }
+
+struct ASTnode * function_declaration(void) {
+  struct ASTnode *tree;
+  int func_id;
+  // no return data type just yet
+  match(T_VOID, "void");
+  ident();
+  func_id = addglobal(Text);
+  lparen();
+  // no arguments just yet
+  rparen();
+
+  tree = compound_statement();
+  
+  return (makeunary(A_FUNCTION, tree, func_id));
+}
+

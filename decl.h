@@ -25,7 +25,8 @@ void free_all_regs(void);
 static int alloc_reg(void);
 static void free_reg(int reg);
 void cgpreamble();
-void cgpostamble();
+void cgfuncpreamble(char *funcname);
+void cgfuncpostamble();
 int cgloadint (int reg);
 int cgadd(int reg1, int reg2);
 int cgsub(int reg1, int reg2);
@@ -62,4 +63,4 @@ int addglobal(char *name);
 
 // decl.c
 void var_declaration(void);
-
+struct ASTnode *function_declaration(void);

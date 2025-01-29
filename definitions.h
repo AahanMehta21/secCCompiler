@@ -22,8 +22,10 @@ enum {
   // 11       12       13         14
   T_LBRACE, T_RBRACE, T_LPAREN, T_RPAREN,
   // 15        16        17        18
-  T_PRINT, T_INT, T_IF, T_ELSE, T_WHILE, T_FOR
+  T_PRINT, T_INT, T_IF, T_ELSE, T_WHILE, T_FOR,
   // 19      20    21     22       23     24
+  T_VOID
+  // 25
 };
 
 // AST nodes:
@@ -34,8 +36,8 @@ enum {
   // 5    6    7    8       9    10
   A_INTLIT, A_IDENT, A_LVIDENT, A_ASSIGN, A_PRINT, A_GLUE, A_IF,
   // 11        12        13          14      15     16      17
-  A_WHILE
-  // 18
+  A_WHILE, A_FUNCTION
+  // 18     19
 };
 
 struct ASTnode {
