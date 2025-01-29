@@ -1,0 +1,11 @@
+{
+  int i;
+  int j;
+  i = 0;
+  while (i < 5) {
+    for (j = 0; j < 5; j = j+1) {
+      print i + j;
+    }
+    i = i + 1;
+  }
+}

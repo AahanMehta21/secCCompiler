@@ -30,23 +30,22 @@ L1:
 	movq $5, %r9
 	cmpq %r9, %r8
 jge L2
-	movq i(%rip), %r8
-	movq %r8, %rdi
-	call printint
-	movq i(%rip), %r8
+	movq $0, %r8
 	movq %r8, j(%rip)
 L3:
 	movq j(%rip), %r8
-	movq $0, %r9
+	movq $5, %r9
 	cmpq %r9, %r8
-jl L4
-	movq j(%rip), %r8
-	movq %r8, %rdi
+jge L4
+	movq i(%rip), %r8
+	movq j(%rip), %r9
+	addq %r8, %r9
+	movq %r9, %rdi
 	call printint
 	movq j(%rip), %r8
 	movq $1, %r9
-	subq %r9, %r8
-	movq %r8, j(%rip)
+	addq %r8, %r9
+	movq %r9, j(%rip)
 	jmp L3
 L4:
 	movq i(%rip), %r8
