@@ -24,7 +24,7 @@ Finally run the executable to see the output.
 - **make test**: This runs the `runtests.sh` script that tests the compiler's output against expected value, prints the output, and displays any difference in output if present.
 - **make testbench**: This runs the `runtestbench.sh` which does the same as `make test` but without printing compiler output
 - **make clean**: Removes the executable files and assembly files
--  ** make git**: Streamlines the process of pushing changes to github
+-  **make git**: Streamlines the process of pushing changes to github
 
 ## Acknowledgements
 - [Nils M Holm](https://www.t3x.org/subc/)
