@@ -14,6 +14,9 @@ test: secc testfiles/runtests.sh
 testbench: secc testfiles/runtestbench.sh
 	(cd testfiles; chmod +x runtests.sh; ./runtestbench.sh)
 
+clockskew:
+	sudo hwclock -s
+
 clean:
 	rm -f secc curr_output out.s out *.o
 
