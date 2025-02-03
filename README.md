@@ -7,7 +7,8 @@ As a part of my CS250 Computer Architecture class, we had to work on making a C 
 ## Features of the compiler
 - Uses recursive descent parsing to parse tokens from source file and Pratt parsing to handle arithmetic operations to maintain operation precedence.
 - Semantic analysis of tokens is done using Abstract Syntax Trees.
-- compiler can handle arithmetic operations, compound statements, global variables, comparision operations, nested flow control, and nested looping.
+- Compiler can handle arithmetic operations, compound statements, global variables, comparision operations, nested flow control, and nested looping.
+- Compiler can handle datatype requests for ```int``` and ```char```
 - Testcases to test functionality of each feature is present, and testbenches are provided to test the correctness of the compiler against expected output.
 
 ### Makefile commands:
