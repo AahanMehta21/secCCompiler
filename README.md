@@ -25,6 +25,7 @@ Finally run the executable to see the output.
 - **make testbench**: This runs the `runtestbench.sh` which does the same as `make test` but without printing compiler output
 - **make clean**: Removes the executable files and assembly files
 -  **make git**: Streamlines the process of pushing changes to github
+- **make clockskew**: runs a command to fix the clockskew error that arises during running the testbenches.
 
 ## Acknowledgements
 - [Nils M Holm](https://www.t3x.org/subc/)
