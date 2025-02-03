@@ -4,7 +4,7 @@
 #include "decl.h"
 #include "data.h"
 
-struct ASTnode* makenode(int operation, struct ASTnode *left,struct ASTnode *middle, struct ASTnode *right, int intvalue) {
+struct ASTnode* makenode(int operation, int type, struct ASTnode *left,struct ASTnode *middle, struct ASTnode *right, int intvalue) {
   struct ASTnode *node = NULL;
   node = (struct ASTnode *) malloc(sizeof(struct ASTnode));
   if (node == NULL) {
@@ -12,6 +12,7 @@ struct ASTnode* makenode(int operation, struct ASTnode *left,struct ASTnode *mid
     exit(1);
   }
   node->operation = operation;
+  node->type = type;
   node->left = left;
   node->middle = middle;
   node->right = right;
@@ -19,11 +20,11 @@ struct ASTnode* makenode(int operation, struct ASTnode *left,struct ASTnode *mid
   return node;
 }
 
-struct ASTnode* makeleaf(int op, int intvalue) {
-  return makenode(op, NULL, NULL, NULL, intvalue);
+struct ASTnode* makeleaf(int op, int type,  int intvalue) {
+  return makenode(op, type, NULL, NULL, NULL, intvalue);
 }
 
-struct ASTnode* makeunary(int op, struct ASTnode *left, int intvalue) {
-  return makenode(op, left, NULL, NULL, intvalue);
+struct ASTnode* makeunary(int op, int type, struct ASTnode *left, int intvalue) {
+  return makenode(op, type, left, NULL, NULL, intvalue);
 }
 

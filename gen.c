@@ -94,11 +94,11 @@ int genAST(struct ASTnode *node, int reg, int parentASTop) {
     case A_DIVIDE:
       return (cgdiv(left_register, right_register));
     case A_INTLIT:
-      return (cgloadint(node->v.intvalue));
+      return (cgloadint(node->v.intvalue, node->type));
     case A_IDENT:
-      return (cgloadglobal(global_vars_table[node->v.id].name));
+      return (cgloadglobal(node->v.id));
     case A_LVIDENT:
-      return (cgstoreglobal(reg, global_vars_table[node->v.id].name));
+      return (cgstoreglobal(reg, node->v.id));
     case A_EQ:
     case A_NE:
     case A_LT:
@@ -106,19 +106,20 @@ int genAST(struct ASTnode *node, int reg, int parentASTop) {
     case A_LE:
     case A_GE:
       if (parentASTop == A_IF || parentASTop == A_WHILE) {
-        return cgcompare_and_jump(node->operation, left_register, right_register, reg);
+        return (cgcompare_and_jump(node->operation, left_register, right_register, reg));
       } else {
-        return cgcompare_and_set(node->operation, left_register, right_register);
+        return (cgcompare_and_set(node->operation, left_register, right_register));
       }
     case A_ASSIGN:
-      return right_register;
+      return (right_register);
     case A_PRINT:
       genprintint(left_register);
       genfreeregs();
       return (NOREG);
+    case A_WIDEN:
+      return (cgwiden(left_register, node->left->type, node->type));
     default:
       fatald("Unknown AST operator", node->operation);
-      exit(1);
   }
 }
 
@@ -134,8 +135,8 @@ void genfreeregs(void) {
 void genprintint(int reg) {
   cgprintint(reg);
 }
-void genglobalsym(char *s) {
-  cgglobalsym(s);
+void genglobalsym(int id) {
+  cgglobalsym(id);
 }
 
 /*

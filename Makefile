@@ -1,6 +1,6 @@
 goal: secc
 
-SRCS= main.c scan.c expr.c tree.c cg.c gen.c misc.c statement.c decl.c sym.c
+SRCS= main.c scan.c expr.c tree.c cg.c gen.c misc.c statement.c decl.c sym.c types.c
 
 secc: $(SRCS)
 	cc -o secc -g $(SRCS)

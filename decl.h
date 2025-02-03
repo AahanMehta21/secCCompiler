@@ -4,9 +4,9 @@
 int scan(struct token *t);
 
 // tree.c
-struct ASTnode *makenode(int op, struct ASTnode *left, struct ASTnode *middle, struct ASTnode *right, int intvalue);
-struct ASTnode *makeleaf(int op, int intvalue);
-struct ASTnode *makeunary(int op, struct ASTnode *left, int intvalue);
+struct ASTnode *makenode(int op, int type, struct ASTnode *left, struct ASTnode *middle, struct ASTnode *right, int intvalue);
+struct ASTnode *makeleaf(int op, int type, int intvalue);
+struct ASTnode *makeunary(int op, int type, struct ASTnode *left, int intvalue);
 
 // expr.c
 struct ASTnode *binexpr(int ptp);
@@ -17,8 +17,8 @@ int genAST(struct ASTnode *node, int reg, int parentASTop);
 void genpreamble();
 void genpostamble();
 void genfreeregs();
-void genprintint(int);
-void genglobalsym(char *);
+void genprintint(int reg);
+void genglobalsym(int id);
 
 //cg.c
 void free_all_regs(void);
@@ -27,19 +27,20 @@ static void free_reg(int reg);
 void cgpreamble();
 void cgfuncpreamble(char *funcname);
 void cgfuncpostamble();
-int cgloadint (int reg);
+int cgloadint (int value, int type);
 int cgadd(int reg1, int reg2);
 int cgsub(int reg1, int reg2);
 int cgmul(int reg1, int reg2);
 int cgdiv(int reg1, int reg2);
 void cgprintint(int reg);
-int cgloadglobal(char *ident);
-int cgstoreglobal(int reg, char *name);
-void cgglobalsym(char *ident);
+int cgloadglobal(int id);
+int cgstoreglobal(int reg, int id);
+void cgglobalsym(int id);
 int cgcompare_and_set(int ASTop, int reg1, int reg2);
 int cgcompare_and_jump(int ASTop, int reg1, int reg2, int label);
 void cglabel(int label);
 void cgjump(int label);
+int cgwiden(int r, int oldtype, int newtype);
 
 // statement.c
 struct ASTnode *compound_statement(void);
@@ -59,8 +60,11 @@ void fatalc(char *s, int c);
 
 // sym.c
 int findglobal(char *s);
-int addglobal(char *name);
+int addglobal(char *name, int type, int stype);
 
 // decl.c
 void var_declaration(void);
 struct ASTnode *function_declaration(void);
+
+// types.c
+int type_compatible(int *left, int *right, int onlyright);

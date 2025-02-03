@@ -24,8 +24,8 @@ enum {
   // 15        16        17        18
   T_PRINT, T_INT, T_IF, T_ELSE, T_WHILE, T_FOR,
   // 19      20    21     22       23     24
-  T_VOID
-  // 25
+  T_VOID, T_CHAR
+  // 25     26
 };
 
 // AST nodes:
@@ -36,12 +36,19 @@ enum {
   // 5    6    7    8       9    10
   A_INTLIT, A_IDENT, A_LVIDENT, A_ASSIGN, A_PRINT, A_GLUE, A_IF,
   // 11        12        13          14      15     16      17
-  A_WHILE, A_FUNCTION
-  // 18     19
+  A_WHILE, A_FUNCTION, A_WIDEN
+  // 18     19          20
+};
+
+// data types
+enum {
+  P_NONE, P_VOID, P_CHAR, P_INT
+  // 0       1      2       3
 };
 
 struct ASTnode {
   int operation;
+  int type;
   struct ASTnode *left;
   struct ASTnode *middle;
   struct ASTnode *right;
@@ -49,6 +56,10 @@ struct ASTnode {
     int intvalue; // if its a T_INTLIT integer value
     int id; // for A_IDENT, the number in the symbol table
   } v;
+};
+
+enum {
+  S_VARIABLE, S_FUNCTION
 };
 
 // variable symbol table defined in data.h cuz it wasnt working otherwise

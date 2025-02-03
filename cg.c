@@ -83,28 +83,47 @@ void cgfuncpostamble()
 }
 
 // load an integer value into next available register and return register id (number)
-int cgloadint(int value) {
+int cgloadint(int value, int type) {
     int curr_reg = alloc_reg();
     fprintf(fasm, "\tmovq $%d, %s\n", value, regStk[curr_reg]);
     return curr_reg;
 }
 
 // load global variable value into next available register
-int cgloadglobal(char *name) {
+int cgloadglobal(int id) {
   int reg = alloc_reg();
-  fprintf(fasm, "\tmovq %s(%%rip), %s\n", name, regStk[reg]);
+  if (global_vars_table[id].type == P_INT) {
+    fprintf(fasm, "\tmovq %s(%%rip), %s\n", global_vars_table[id].name, regStk[reg]);
+  }
+  else {
+    fprintf(fasm, "\tmovzbq %s(%%rip), %s\n", global_vars_table[id].name, regStk[reg]);
+  }
   return (reg);
 }
 
 // store a register's value into global variable specified
-int cgstoreglobal(int reg, char *name) {
-  fprintf(fasm, "\tmovq %s, %s(%%rip)\n", regStk[reg], name);
+int cgstoreglobal(int reg, int id) {
+  if (global_vars_table[id].type == P_INT) {
+    fprintf(fasm, "\tmovq %s, %s(%%rip)\n", regStk[reg], global_vars_table[id].name);
+  }
+  else {
+    fprintf(fasm, "\tmovb %s, %s(%%rip)\n", byteRegStk[reg], global_vars_table[id].name);
+  }
   return (reg);
 }
 
+int cgwiden(int reg, int oldtype, int newtype) {
+  return reg;
+}
+
 // declare global variable
-void cgglobalsym(char *sym) {
-  fprintf(fasm, "\t.comm\t%s,8,8\n", sym);
+void cgglobalsym(int id) {
+  if (global_vars_table[id].type == P_INT) {
+    fprintf(fasm, "\t.comm\t%s,8,8\n", global_vars_table[id].name);
+  }
+  else {
+    fprintf(fasm, "\t.comm\t%s,1,1\n", global_vars_table[id].name);
+  }
 }
 
 // add two given registers, free one register and store the result in the other register and return its id

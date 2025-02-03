@@ -9,7 +9,9 @@
 
 // variable symbol table
 struct symtable {
-  char *name; // variable name
+  char *name;   // variable name
+  int type;      // data type of symbol
+  int stype;     // structure type of symbol
 };
 
 extern_ int line;

@@ -6,19 +6,29 @@ static struct ASTnode *single_statement(void);
 
 static struct ASTnode * print_statement(void) {
   struct ASTnode *tree;
+  int lefttype, righttype;
   int reg;
   // PRINT
   match(T_PRINT, "print");
   // parses the expression and generates expression tree
   tree = binexpr(0);
+  lefttype = P_INT;
+  righttype = tree->type;
+  if (!type_compatible(&lefttype, &righttype, 0)) {
+    fatal("Incompatible types");
+  }
+  if (righttype) {
+    tree = makeunary(righttype, P_INT, tree, 0);
+  }
   // print sentence is added to expression tree
-  tree = makeunary(A_PRINT, tree, 0);
+  tree = makeunary(A_PRINT, P_NONE, tree, 0);
 
   return (tree);
 }
 
 static struct ASTnode * assignment_statement(void) {
   struct ASTnode *left, *right, *tree;
+  int lefttype, righttype;
   int id;
   // ensure identifier exists in source code
   ident();
@@ -26,12 +36,20 @@ static struct ASTnode * assignment_statement(void) {
   if (id == -1) {
     fatals("Undeclared variable", Text);
   }
-  right = makeleaf(A_LVIDENT, id);
+  right = makeleaf(A_LVIDENT, global_vars_table[id].type, id);
   // =
   match(T_ASSIGN, "=");
   // EXPRESSION
   left = binexpr(0);
-  tree = makenode(A_ASSIGN, left, NULL, right, 0);
+  lefttype = left->type;
+  righttype = right->type;
+  if (!type_compatible(&lefttype, &righttype, 1)) {
+    fatal("Incompatible types");
+  }
+  if (lefttype) {
+    left = makeunary(lefttype, right->type, left, 0);
+  }
+  tree = makenode(A_ASSIGN, P_INT, left, NULL, right, 0);
 
   return (tree);
 }
@@ -50,7 +68,7 @@ static struct ASTnode * while_statement(void) {
 
   bodyAST = compound_statement();
 
-  return (makenode(A_WHILE, condAST, NULL, bodyAST, 0));
+  return (makenode(A_WHILE, P_NONE, condAST, NULL, bodyAST, 0));
 }
 
 static struct ASTnode *for_statement(void) {
@@ -76,9 +94,9 @@ static struct ASTnode *for_statement(void) {
 
   // for loop is treated as a disfigured while loop.
 
-  tree = makenode(A_GLUE, bodyAST, NULL, postopAST, 0);
-  tree = makenode(A_WHILE, condAST, NULL, tree, 0);
-  return (makenode(A_GLUE, preopAST, NULL, tree, 0));
+  tree = makenode(A_GLUE, P_NONE, bodyAST, NULL, postopAST, 0);
+  tree = makenode(A_WHILE, P_NONE, condAST, NULL, tree, 0);
+  return (makenode(A_GLUE, P_NONE, preopAST, NULL, tree, 0));
 }
 
 static struct ASTnode *if_statement(void) {
@@ -97,13 +115,14 @@ static struct ASTnode *if_statement(void) {
     scan(&Token);
     falseAST = compound_statement();
   }
-  return (makenode(A_IF, condAST, trueAST, falseAST, 0));
+  return (makenode(A_IF, P_NONE, condAST, trueAST, falseAST, 0));
 }
 
 static struct ASTnode *single_statement(void) {
   switch(Token.token) {
     case T_PRINT:
       return (print_statement());
+    case T_CHAR:
     case T_INT:
       var_declaration();
       return (NULL); // no tree generated
@@ -135,7 +154,7 @@ struct ASTnode * compound_statement(void) {
       if (left == NULL) {
         left = tree;
       } else {
-        left = makenode(A_GLUE, left, NULL, tree, 0);
+        left = makenode(A_GLUE, P_NONE, left, NULL, tree, 0);
       }
     }
     if (Token.token == T_RBRACE) {

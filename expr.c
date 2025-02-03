@@ -22,14 +22,19 @@ static struct ASTnode *primary() {
   // make AST leaf node if INTLIT else error
   switch (Token.token) {
     case T_INTLIT:
-      node = makeleaf(A_INTLIT, Token.intvalue);
+      if ((Token.intvalue) >= 0 && (Token.intvalue < 256)) {
+        node = makeleaf(A_INTLIT, P_CHAR, Token.intvalue);
+      }
+      else {
+        node = makeleaf(A_INTLIT, P_INT, Token.intvalue);
+      }
       break;
     case T_IDENT:
       id = findglobal(Text);
       if (id == -1) {
         fatals("Unknown variable", Text);
       }
-      node = makeleaf(A_IDENT, id);
+      node = makeleaf(A_IDENT, global_vars_table[id].type, id);
       break;
     default:
       fatald("Syntax error, token", Token.token);
@@ -48,7 +53,7 @@ int arithmetic_op(int token) {
 // generate an ASTtree
 // param: int ptp: previous token's precedencee
 struct ASTnode* binexpr(int ptp) {
-  int tokentype;
+  int tokentype, lefttype, righttype;
   struct ASTnode *left, *right;
 
   // load integer literal into left pointer, and fetch next token
@@ -63,13 +68,24 @@ struct ASTnode* binexpr(int ptp) {
     scan(&Token);
     // recursively call binexpr with precedence of current token to build AST tree
     right = binexpr(opPrec[tokentype]);
-    left = makenode(arithmetic_op(tokentype), left, NULL, right, 0);
+    lefttype = left->type;
+    righttype = right->type;
+    if (!type_compatible(&lefttype, &righttype, 0)) {
+      fatal("Incompatible types");
+    }
+    if (lefttype) {
+      left = makeunary(lefttype, right->type, left, 0);
+    }
+    if (righttype) {
+      right = makeunary(righttype, left->type, right, 0);
+    }
+    left = makenode(arithmetic_op(tokentype), left->type, left, NULL, right, 0);
     tokentype = Token.token;
     if (tokentype == T_SEMI || tokentype == T_RPAREN) {
-      return left;
+      return (left);
     }
   }
-  return left;
+  return (left);
 }
 
 // enforces syntax

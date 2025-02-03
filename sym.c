@@ -23,12 +23,14 @@ static int newglobal(void) {
 }
 
 // add a new symbol to the global variables table
-int addglobal(char *name) {
+int addglobal(char *name, int type, int stype) {
   int pos;
   if ((pos = findglobal(name)) != -1) {
     return pos;
   }
   pos = newglobal();
   global_vars_table[pos].name = strdup(name);
+  global_vars_table[pos].type = type;
+  global_vars_table[pos].stype = stype;
   return pos;
 }
